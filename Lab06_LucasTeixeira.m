@@ -63,7 +63,7 @@ sG=minreal (sG); % Cancela 's' em comum no numerador
 Kv=dcgain(sG); % Calcula Kv=sG(s)
 erp=1/Kv; % Calcula o erro em regime permanente Kv
 subplot (2,2,2); 
-lsim(sG,rampa,t)
+lsim(G,rampa,t)
 
 %Análise Parabola
 
@@ -74,9 +74,14 @@ s2G=minreal (s2G); % Cancela 's' em comum no numerador
 Ka=dcgain(s2G); % Calcula Ka=s^2G(s) para s=0.
 erp=1/Ka; % Calcula o erro em regime permanente
 subplot (2,2,3); 
-lsim(s2G,parabola,t)
+lsim(G,parabola,t)
 
-% fprintf('Kp = %.2f Kv = %.2f Ka = %.2f \n',kp,kv,ka);
+fprintf('Kp = %.2f Kv = %.2f Ka = %.2f \n',Kp,Kv,Ka);
+
+pause(60);
+clear all;                                                                  %apaga todas as variáveis
+close all;                                                                  %fecha todas as figuras
+clc;                                                                        %limpa a janela de comando
 
 %%%%%%%%       Problema 2
 
@@ -85,4 +90,10 @@ deng = poly([-2 -14 -135]); % Define o denominador de G(s).
 G=tf(numg,deng);
 T=feedback(G,1); %Verifica Estabilidade
 polos = pole(T); % Calcula os polos em malha fechada.
+
+%Exibe os pólos em malha fechada
+for i = 1: size(polos,1) %para cada linha do vetor
+    fprintf('Os pólos em malha fechada são: %.2f.\n',polos(i));
+end
+
 
