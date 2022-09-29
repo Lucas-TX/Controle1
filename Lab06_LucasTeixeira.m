@@ -1,4 +1,4 @@
-%Estratégia - Prob1: 520
+%Estratégia - Prob1:
 %Verifica estabilidade
 %Calcular constantes de erro: Kp,Kv,Ka
 %Para cada entrada, obter erros esperados
@@ -34,10 +34,13 @@ title ('Parábola');
 
 %%%%%%%%       Problema 1
 
+fprintf('----- Problema 1 -----\n');
+
 %Declaração da G(s)
 numg=15 * poly([-6]); %Declara numerador de G(s)
 deng = poly([-2 -14 -135]); % Define o denominador de G(s).
 G=tf(numg,deng);
+
 %Análise Estabilidade
 T=feedback(G,1); %Verifica Estabilidade
 polos = pole(T); % Calcula os polos em malha fechada.
@@ -49,43 +52,49 @@ end
 
 %Análise Degrau
 Kp=dcgain(G); % Calcula Kp
-erroP = 1/(1+Kp);
+erroDegrau = 1/(1+Kp);
 figure
 subplot (2,2,1); 
 lsim(G,degrau,t)
+title ('Entrada Degrau');
+
 
 %Análise Rampa
 
 numSg=conv ([1 0],numg); % Define o numerador de sG(s).
-denSg=deng; % Define o denominador de sG(s).
-sG=tf (numSg,denSg); % Cria sG(s).
+sG=tf (numSg,deng); % Cria sG(s).
 sG=minreal (sG); % Cancela 's' em comum no numerador
 Kv=dcgain(sG); % Calcula Kv=sG(s)
-erp=1/Kv; % Calcula o erro em regime permanente Kv
+erroRampa=1/Kv; % Calcula o erro em regime permanente Kv
 subplot (2,2,2); 
-lsim(G,rampa,t)
+lsim(sG,rampa,t)
+title ('Entrada Rampa');
 
 %Análise Parabola
 
 nums2g=conv ([1 0 0],numg); % Define o numerador de s^2G(s).
-dens2g=poly([-8 -10 -12]); % Define o denominador de s^2G(s).
-s2G=tf (nums2g,dens2g); % Cria s^2G(s).
+s2G=tf (nums2g,deng); % Cria s^2G(s).
 s2G=minreal (s2G); % Cancela 's' em comum no numerador
 Ka=dcgain(s2G); % Calcula Ka=s^2G(s) para s=0.
-erp=1/Ka; % Calcula o erro em regime permanente
+erroParabola=1/Ka; % Calcula o erro em regime permanente
 subplot (2,2,3); 
-lsim(G,parabola,t)
+lsim(s2G,parabola,t)
+title ('Entrada Parábola');
 
 fprintf('Kp = %.2f Kv = %.2f Ka = %.2f \n',Kp,Kv,Ka);
+fprintf('Ep = %.2f Ev = %.2f Ea = %.2f \n',erroDegrau,erroRampa,erroParabola);
 
-pause(60);
-clear all;                                                                  %apaga todas as variáveis
-close all;                                                                  %fecha todas as figuras
-clc;                                                                        %limpa a janela de comando
+disp('Programa Pausado. Faça análise do problema 1 e aperte alguma tecla\n') 
+pause;
+
+clear all;                       %apaga todas as variáveis
+close all;                       %fecha todas as figuras
+clc;                             %limpa a janela de comando
 
 %%%%%%%%       Problema 2
 
-numg= 1; %Declara numerador de G(s)
+fprintf('----- Problema 2 -----\n');
+numg= 13.2857; %Declara numerador de G(s)
 deng = poly([-2 -14 -135]); % Define o denominador de G(s).
 G=tf(numg,deng);
 T=feedback(G,1); %Verifica Estabilidade
@@ -96,4 +105,43 @@ for i = 1: size(polos,1) %para cada linha do vetor
     fprintf('Os pólos em malha fechada são: %.2f.\n',polos(i));
 end
 
+% Declara degrau, rampa e parabola
+
+degrau = ones(1,1000);
+t = linspace ( 0 , 5,1000);
+rampa = t;
+parabola = (t.^2)/2;
+
+%Análise Degrau
+Kp=dcgain(G); % Calcula Kp
+erroDegrau = 1/(1+Kp);
+figure
+subplot (2,2,1); 
+lsim(G,degrau,t)
+title ('Entrada Degrau');
+
+%Análise Rampa
+
+numSg=conv ([1 0],numg); % Define o numerador de sG(s).
+sG=tf (numSg,deng); % Cria sG(s).
+sG=minreal (sG); % Cancela 's' em comum no numerador
+Kv=dcgain(sG); % Calcula Kv=sG(s)
+erroRampa=1/Kv; % Calcula o erro em regime permanente Kv
+subplot (2,2,2); 
+lsim(sG,rampa,t)
+title ('Entrada Rampa');
+
+%Análise Parabola
+
+nums2g=conv ([1 0 0],numg); % Define o numerador de s^2G(s).
+s2G=tf (nums2g,deng); % Cria s^2G(s).
+s2G=minreal (s2G); % Cancela 's' em comum no numerador
+Ka=dcgain(s2G); % Calcula Ka=s^2G(s) para s=0.
+erroParabola=1/Ka; % Calcula o erro em regime permanente
+subplot (2,2,3); 
+lsim(s2G,parabola,t)
+title ('Entrada Parábola');
+
+fprintf('Kp = %.2f Kv = %.2f Ka = %.2f \n',Kp,Kv,Ka);
+fprintf('Ep = %.2f Ev = %.2f Ea = %.2f \n',erroDegrau,erroRampa,erroParabola);
 
