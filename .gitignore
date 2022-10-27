@@ -1,6 +1,4 @@
 #ignora o diretório de descrição dos problemas 
-Problem Description/
-#ignora o diretório com os arquivos enviados para avaliação 
-Envios/
+Documentação/
 #ignora o diretório que contém os relatórios enviados
 Relatórios/
